@@ -9,7 +9,7 @@ let rectangles = [
 ];
 let hasColor = (color) => (rectangle) => rectangle.color == color;
 let flow = (...funcArray) => (array) => funcArray.reduce((prevFunc, currFunc) => currFunc(prevFunc), array);
-
+let combine = (...funcArray) => (array) => funcArray.reduceRight((prevFunc, currFunc) => currFunc(prevFunc), array);
 let filter = (fn) => (array) => array.filter(fn);
 let map = (fn) => (array) => array.map(fn);
 let reduce = (fn, initialValue) => (array) => array.reduce(fn, initialValue);
@@ -37,10 +37,10 @@ function calcPerimeter(rectangle) {
     return 2 * (rectangle.width + rectangle.height);
 }
 
-let maxBlackArea = flow(
-    filter(and(isBlack, isSquare)),
+let maxBlackArea = combine(
+    max,
     map(calcArea),
-    max
+    filter(and(isBlack, isSquare))
 );
 let maxRedPerimeter = flow(
     filter(and(isRed,notSquare)),    
@@ -48,6 +48,6 @@ let maxRedPerimeter = flow(
     sum
 );
 
-console.log(`max black area: ${maxBlackArea(rectangles)}`);
+console.log(`max black square area: ${maxBlackArea(rectangles)}`);
 console.log(`sum red rectangle peremeters: ${maxRedPerimeter(rectangles)}`);
 
